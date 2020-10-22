@@ -22,7 +22,7 @@ class CNN_3layer_fc_model(nn.Module):
                                   nn.BatchNorm2d(256),
                                   nn.ReLU(),
                                   nn.Dropout2d(0.2))
-        self.FC1 = nn.Linear(2304,10)
+        self.FC1 = nn.Linear(2304,16)
 
     def forward(self, x):
         x = self.CNN1(x)
@@ -50,7 +50,7 @@ class CNN_2layer_fc_model(nn.Module):
                                   nn.BatchNorm2d(256),
                                   nn.ReLU(),
                                   nn.Dropout2d(0.2))
-        self.FC1 = nn.Linear(43264,10)
+        self.FC1 = nn.Linear(43264,16)
 
     def forward(self, x):
         x = self.CNN1(x)
@@ -74,11 +74,11 @@ def remove_last_layer(model):
 # 否则后向传播可能不会更新FC的参数，
 # （我的猜测，具体会不会更新我没有试，有兴趣的可以试一下，之后告诉我一下）。
 import torch as tc
-import torch
-# 测试CNN_2layer_fc_model与CNN_3lyaer_fc_model结构
-#net = CNN_2layer_fc_model()
-data_input = tc.autograd.Variable(torch.randn([1, 1, 28, 28]))  # 这里假设输入图片是28*28
-net = CNN_3layer_fc_model()
-#print(net(data_input).shape)
-# from torchsummary import summary
-# summary(net,[(1,28,28)])
+# import torch
+# # 测试CNN_2layer_fc_model与CNN_3lyaer_fc_model结构
+# #net = CNN_2layer_fc_model()
+# # data_input = tc.autograd.Variable(torch.randn([1, 1, 28, 28]))  # 这里假设输入图片是28*28
+# # net = CNN_3layer_fc_model()
+# # #print(net(data_input).shape)
+# # from torchsummary import summary
+# # summary(net,[(1,28,28)])
