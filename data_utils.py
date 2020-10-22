@@ -142,7 +142,13 @@ def FEMNIST_iid(dataset,num_users):
         all_idxs = list(set(all_idxs)-dict_users[i])
     return dict_users
 
-
+def MNIST_random(dataset,epochs):
+    num_item = 5000
+    dict_epoch,all_idxs = {},[i for i in range(len(dataset))]
+    for i in range(epochs):
+        dict_epoch[i] = set(np.random.choice(all_idxs,num_item,replace=False))
+        all_idxs = list(set(all_idxs)-dict_epoch[i])
+    return dict_epoch
 
 class args:
     dataset = 'mnist'

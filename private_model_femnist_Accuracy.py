@@ -8,7 +8,7 @@ from torch import nn
 class args:
     gpu =1
     dataset ='mnist'
-    url = 'Src\PrivateModel'
+    url = 'Src\CollaborativeModel'
     private_dataset = 'FEMNIST'
 
 def get_model_list(url,modelsindex,models):

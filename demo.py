@@ -114,43 +114,62 @@
 # test_loader = DataLoader(dataset=test_data, batch_size=64)
 
 import matplotlib.pyplot as plt
-import torch
-from data_utils import get_private_dataset_balanced
-class args:
-    private_dataset = 'FEMNIST'
-
-data_train,data_test = get_private_dataset_balanced(args)
-data_loader_train = torch.utils.data.DataLoader(dataset=data_train, batch_size=100, shuffle=True)  #600*100*([[28*28],x])
-
-for i, (images, labels) in enumerate(data_loader_train):
-
-    print(labels)
-    # '''
-    #     每一个周期，共600个批次（i=0~599）；
-    #     data_loader_train包含600个批次，包括整个训练集；
-    #     每一批次一共100张图片，对应100个标签, len(images[0])=1；
-    #     images包含一个批次的100张图片（image[0].shape=torch.Size([1,28,28])），labels包含一个批次的100个标签，标签范围为0~9
-    # '''
-    #
-    # #每100个批量绘制绘制最后一个批量的所有图片
-    # if (i ) % 10 == 0:
-    #     print('batch_number [{}/{}]'.format(i + 1, len(data_train)))
-    #     for j in range(len(images)):
-    #         image = images[j].resize(28, 28) #将(1,28,28)->(28,28)
-    #         plt.imshow(image)  # 显示图片,接受tensors, numpy arrays, numbers, dicts or lists
-    #         plt.axis('off')  # 不显示坐标轴
-    #         plt.title("$The {} picture in {} batch, label={}$".format(j + 1, i + 1, labels[j]))
-    #         plt.show()
-import torch
-from torch import nn
+# import torch
+# from data_utils import get_private_dataset_balanced
+# class args:
+#     private_dataset = 'FEMNIST'
 #
-# loss = nn.NLLLoss(reduction="none")
-# input = torch.tensor(([1.,2.,3.],[4.,5.,6.]))
-# target = torch.tensor([5,4])
-# output = loss(input, target)
-# print(output)
+# data_train,data_test = get_private_dataset_balanced(args)
+# data_loader_train = torch.utils.data.DataLoader(dataset=data_train, batch_size=100, shuffle=True)  #600*100*([[28*28],x])
+#
+# for i, (images, labels) in enumerate(data_loader_train):
+#
+#     print(labels)
+#     # '''
+#     #     每一个周期，共600个批次（i=0~599）；
+#     #     data_loader_train包含600个批次，包括整个训练集；
+#     #     每一批次一共100张图片，对应100个标签, len(images[0])=1；
+#     #     images包含一个批次的100张图片（image[0].shape=torch.Size([1,28,28])），labels包含一个批次的100个标签，标签范围为0~9
+#     # '''
+#     #
+#     # #每100个批量绘制绘制最后一个批量的所有图片
+#     # if (i ) % 10 == 0:
+#     #     print('batch_number [{}/{}]'.format(i + 1, len(data_train)))
+#     #     for j in range(len(images)):
+#     #         image = images[j].resize(28, 28) #将(1,28,28)->(28,28)
+#     #         plt.imshow(image)  # 显示图片,接受tensors, numpy arrays, numbers, dicts or lists
+#     #         plt.axis('off')  # 不显示坐标轴
+#     #         plt.title("$The {} picture in {} batch, label={}$".format(j + 1, i + 1, labels[j]))
+#     #         plt.show()
+# import torch
+# from torch import nn
+# #
+# # loss = nn.NLLLoss(reduction="none")
+# # input = torch.tensor(([1.,2.,3.],[4.,5.,6.]))
+# # target = torch.tensor([5,4])
+# # output = loss(input, target)
+# # print(output)
+#
+# '''
+# 输出：tensor([[2., 0., 2.],
+#               [4., 0., 4.]])
+# '''
+# import  numpy as np
+# list = []
+# list1 = [1,2,3]
+# list2 = [2,3,4]
+# list.append(list1)
+# list.append(list2)
+# print(np.array(list).mean(axis=0))
 
-'''
-输出：tensor([[2., 0., 2.],
-              [4., 0., 4.]])
-'''
+sum = []
+for i in range(2):
+    sum.append([])
+    for j in range(10):
+        sum[i].append(j)
+
+print(sum)
+for index in range(len(sum)):
+    print(sum[index])
+    for item in range(sum[index]):
+        print(item)
