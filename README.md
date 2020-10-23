@@ -32,7 +32,7 @@ Transfer learning: Before a participant starts the collaboration phase, its mode
 
 m个参与者
 
-每个local 有一个非常小的labeled dataset D_k :={(xi^k,yi)}Nk i=1（可能是或者不是同分布）
+每个local 有一个非常小的labeled dataset $D_k$ :={($x_i^k$,$y_i$)}Nk i=1（可能是或者不是同分布）
 
 还有一个大的公有数据集 D0 :={(xi0,yi)}N0 i=1 每个人都可以access
 
