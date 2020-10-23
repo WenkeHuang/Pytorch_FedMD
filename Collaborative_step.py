@@ -7,11 +7,12 @@ if __name__ == '__main__':
     args = args_parser()
     accuracy = []
     for item in range(args.Communicationepoch):
+        print('This is {} time communcation'.format(item))
         eachround_accuracy = []
         eachround_accuracy = test_accuracy_collaborativemodel(args)
         collaborative_private_model_mnist_train(args)
         collaborative_private_model_femnist_train(args)
-        accuracy.append()
+        accuracy.append(eachround_accuracy)
 
     for i, val in enumerate(accuracy):
         print(val)

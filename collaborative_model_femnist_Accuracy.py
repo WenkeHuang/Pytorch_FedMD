@@ -40,4 +40,4 @@ def test_accuracy_collaborativemodel(args):
 from option import args_parser
 if __name__ == '__main__':
     args = args_parser()
-    test_accuracy_privateinitialmodel(args)
+    test_accuracy_collaborativemodel(args)
