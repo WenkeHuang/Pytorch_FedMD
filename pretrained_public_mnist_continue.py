@@ -5,28 +5,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch import nn
 import matplotlib.pyplot as plt
-
-class args:
-    gpu =1
-    dataset ='mnist'
-    initialurl = 'Src\Model'
-    continue_epoch = 10
-    lr = 0.01
-    optimizer ='sgd'
-
-def get_model_list(url,modelsindex,models):
-    model_list = []
-    model_type_list = []
-    filePath = url
-    for root, dirs, files in os.walk(filePath, topdown=False):
-        for name in files:
-            # print(os.path.join(root, name))
-            # print(name[name.find('Type')+4])
-            model_type_list.append(int(name[name.find('Type')+4]))
-            net = models[modelsindex[int(name[name.find('Type')+4])]]()
-            net.load_state_dict(torch.load(os.path.join(root, name)))
-            model_list.append(net)
-    return model_list,model_type_list
+from utils import get_model_list
 
 def continue_train_models(args):
     device = 'cuda' if args.gpu else 'cpu'

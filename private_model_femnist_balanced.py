@@ -5,28 +5,7 @@ import torch
 from torch.utils.data import DataLoader,Dataset
 from torch import nn
 import matplotlib.pyplot as plt
-
-class args:
-    gpu =1
-    dataset ='mnist'
-    url = 'Src\Model'
-    epoch = 15
-    lr = 0.01
-    optimizer ='sgd'
-    client_number = 10
-    private_dataset = 'FEMNIST'
-
-def get_model_list(url,modelsindex,models):
-    model_list = []
-    model_type_list = []
-    filePath = url
-    for root, dirs, files in os.walk(filePath, topdown=False):
-        for name in files:
-            model_type_list.append(int(name[name.find('Type')+4]))
-            net = models[modelsindex[int(name[name.find('Type')+4])]]()
-            net.load_state_dict(torch.load(os.path.join(root, name)))
-            model_list.append(net)
-    return model_list,model_type_list
+from utils import get_model_list
 
 class DatasetSplit(Dataset):
     """
@@ -42,20 +21,21 @@ class DatasetSplit(Dataset):
         image,label = self.dataset[self.idxs[item]]
         return torch.tensor(image),torch.tensor(label)
 
-if __name__ == '__main__':
-
+def private_dataset_train(args):
     device ='cuda' if args.gpu else 'cpu'
     # 用于初始化模型的部分
     # 获得FEMNIST数据集！
     train_dataset,test_dataset = get_private_dataset_balanced(args)
-    user_groups = FEMNIST_iid(train_dataset,args.client_number)
-
+    user_groups = FEMNIST_iid(train_dataset, args.user_number)
 
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
           "3_layer_CNN": CNN_3layer_fc_model}
     modelsindex = ["2_layer_CNN","3_layer_CNN"]
-    model_list,model_type_list = get_model_list(args.url,modelsindex,models)
 
+    if args.new_private_training:
+        model_list,model_type_list = get_model_list(args.initialurl,modelsindex,models)
+    else:
+        model_list,model_type_list = get_model_list(args.privateurl,modelsindex,models)
 
     private_model_private_dataset_train_losses = []
     for n, model in enumerate(model_list):
@@ -72,7 +52,7 @@ if __name__ == '__main__':
         criterion = nn.NLLLoss().to(device)
         train_epoch_losses = []
         print('Begin Private Training')
-        for epoch in range(args.epoch):
+        for epoch in range(args.privateepoch):
             train_batch_losses = []
             for batch_idx, (images, labels) in enumerate(trainloader):
                 images,labels = images.to(device),labels.to(device)
@@ -88,7 +68,7 @@ if __name__ == '__main__':
                 train_batch_losses.append(loss.item())
             loss_avg = sum(train_batch_losses)/len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
-        torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.epoch))
+        torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         private_model_private_dataset_train_losses.append(train_epoch_losses)
     plt.figure()
     for i,val in enumerate(private_model_private_dataset_train_losses):
@@ -100,6 +80,11 @@ if __name__ == '__main__':
     plt.show()
     print('End Private Training')
 
+
+from option import args_parser
+if __name__ == '__main__':
+    args = args_parser()
+    private_dataset_train(args)
 
 
 

@@ -21,7 +21,7 @@ def train_models(device,models,modelsindex,train_dataset,lr,optimizer,epochs):
         elif optimizer == 'adam':
             optimizer = torch.optim.Adam(model.parameters(), lr=lr,
                                      weight_decay=1e-4)
-        trainloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+        trainloader = DataLoader(train_dataset, batch_size=512, shuffle=True)
         criterion = torch.nn.NLLLoss().to(device)
         train_epoch_losses = []
         print('Begin Public Training')
@@ -80,5 +80,5 @@ if __name__ == '__main__':
         # 添加到model list中
         pretrain_models.append(tempmodel)
 
-    train_models(device,pretrain_models,pretrain_modelsindex,train_dataset,args.lr,args.optimzier,args.epoch)
+    train_models(device,pretrain_models,pretrain_modelsindex,train_dataset,args.lr,args.optimizer,args.epoch)
 

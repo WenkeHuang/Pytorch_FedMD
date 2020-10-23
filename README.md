@@ -113,3 +113,40 @@ end
 |  ----  | ----  |----  |----  |
 | get_model_list  | url,modelsindex,models |model_list,model_type_list |用于获取之前训练的模型的权重和对应的类别list|
 |continue_train_models|args|NULL|用于继续训练初始化模型，然后参数详见option.py|
+### pretrained_public_mnist_Accuracy.py
+用于检测在公有数据集上是否收敛
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| initialurl  | 'Src\Model' |String  |place to save the initial model |
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| get_model_list  | url,modelsindex,models |model_list |用于获取之前训练的模型的权重list|
+| test_accuracy_initialmodel  |args |NULL |用于检测第一步public上训练的模型是否准确度ok|
+### private_model_femnist_balanced.py
+用于继续训练各个local的私有模型在各自的私有FEMNIST数据集上
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| private_dataset  | 'FEMNIST' |'FEMNIST' |name of private dataset |
+| initialurl  | 'Src\Model' |String  |place to save the initial model |
+| privateurl  | 'Src\Model' |String  |place to save the private model which means continue train....... |
+|new_private_training|True|True,False|whether train model from initial condition|
+| continue_epoch  | 10 |int number |number of epoch to continue |
+| lr  | 0.01 |float number |learning rate |
+| optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
+
+
+|  Class name   | Explanation
+|  ---- |----  |
+| DatasetSplit  |用于切割FEMNIST根据对应的索引|
+
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| get_model_list  | url,modelsindex,models |model_list,model_type_list |用于获取之前训练的模型的权重和对应的类别list|
+|private_dataset_train|args|NULL|用于对各个私有模型在各自的私有数据集上进行训练|
+
