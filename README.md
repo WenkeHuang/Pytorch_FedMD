@@ -62,7 +62,27 @@ Revist：每个模型在自己的私有数据集上再训练几个周期
 
 end
 ## File explanation
-### pretrained_public_mnist_initial
+### data_utils.py
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| get_public_dataset  | args.dataset |data_train,data_test |获得公有数据集MNIST |
+| convert_to_img  | root, train_set, test_set, train=True |NULL | 用于处理私有数据集-生成train和test的txt文件 |
+|init_private_dataset|args.private_dataset|NULL|配合convert_to_img 完成对ubyte后缀数据集的处理，FEMNIST需要额外处理|
+|default_loader|path|Image.open(path)|用于打开对应的图片|
+|get_private_dataset|args.private_dataset|data_train,data_test|获得未筛选过的私有数据集FEMNIST|
+|get_private_dataset_balanced|args.private_dataset|data_train,data_test|获得筛选过类（a-f）的私有数据集|
+|FEMNIST_iid|dataset,num_users|dict_users|用于生成私有数据集是iid模式的数据标签索引字典|
+|MNIST_random|dataset, epochs|dict_epoch|用于生成用于合作训练的公有训练集，每次5000张，索引字典|
+
+### demo.py
+
+|  Class name   | Input Shape  | Output Shape| Explanation
+|  ----  | ----  |----  |----  |
+| CNN_3layer_fc_model_removelogsoftmax  | 1,28,28 |16,1 |用于模型的交流 移除了Softmax |
+| CNN_2layer_fc_model_removelogsoftmax  | 1,28,28 |16,1 |用于模型的交流 移除了Softmax |
+| CNN_3layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
+| CNN_2layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
+### pretrained_public_mnist_initial.py
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 | 单元格  | 单元格 |单元格 |单元格 |

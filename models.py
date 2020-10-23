@@ -73,7 +73,6 @@ class CNN_2layer_fc_model(nn.Module):
 # 在实际训练过程中必须先进行一次前向传播。
 # 否则后向传播可能不会更新FC的参数，
 # （我的猜测，具体会不会更新我没有试，有兴趣的可以试一下，之后告诉我一下）。
-import torch as tc
 # import torch
 # # 测试CNN_2layer_fc_model与CNN_3lyaer_fc_model结构
 # #net = CNN_2layer_fc_model()
@@ -82,7 +81,6 @@ import torch as tc
 # # #print(net(data_input).shape)
 # # from torchsummary import summary
 # # summary(net,[(1,28,28)])
-import torch
 class CNN_3layer_fc_model_removelogsoftmax(nn.Module):
     def __init__(self):
         super(CNN_3layer_fc_model_removelogsoftmax, self).__init__()
