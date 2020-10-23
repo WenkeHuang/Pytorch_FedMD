@@ -32,13 +32,35 @@ Transfer learning: Before a participant starts the collaboration phase, its mode
 
 m个参与者
 
-每个local 有一个非常小的labeled dataset $D_k$ :={($x_i^k$,$y_i$)}Nk i=1（可能是或者不是同分布）
+每个local 有一个非常小的labeled dataset $D_k$ :={($x_i^k$,$y_i$)}^{N_k}_{i=1}（可能是或者不是同分布）
 
-还有一个大的公有数据集 D0 :={(xi0,yi)}N0 i=1 每个人都可以access
+还有一个大的公有数据集 $D_0$ :={($x_i^0$,$y_i$)}^{N_0}_{i=1} 每个人都可以access
 
-大家独立设计自己的模型fk
+大家独立设计自己的模型$f_k$
 
-目的是建立一个合作网络提升fk性能（强于自己在自己的Dk和D0上训练）
+目的是建立一个合作网络提升$f_k$性能（强于自己在自己的$D_k$和$D_0$上训练）
+
+**FedMD**
+
+Input：公有数据集$D_0$ 私有数据集$D_k$ 独立设计的模型$f_k$
+
+Output：训练后的模型$f_k$
+
+迁移学习：每方local的$f_k$先收敛在公有的$D_0$，再在私有数据集$D_k$
+
+for j=1,2,....P do
+
+交流：每个模型计算class score $f_k$(x_i^0) on 公有数据集，然后transmits 结果到中央服务器
+
+整合：把大家的结果直接取平均	
+
+Distribute: 每个参与者下载更新后的结果
+
+Digest：参与者训练fk模型 去接近 在公有数据集上大家的平均结果
+
+Revist：每个模型在自己的私有数据集上再训练几个周期
+
+end
 
 
 
