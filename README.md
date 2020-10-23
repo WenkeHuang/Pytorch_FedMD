@@ -107,6 +107,8 @@ end
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 | train_models  | device,models,modelsindex,train_dataset,lr,optimizer,epochs |NULL |用于训练私有数据集在MNIST数据集上|
+
+
 ![pretrained_public_mnist_initial_result](Src/Figure/private_model_public_dataset_initial_train_losses.png)
 ### pretrained_public_mnist_continue.py
 用于继续训练各个locla的私有模型在MNIST数据集上，直到模型收敛
@@ -122,6 +124,8 @@ end
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 |continue_train_models|args|NULL|用于继续训练初始化模型，然后参数详见option.py|
+
+
 ![private_model_public_dataset_train_continue_losses](Src/Figure/private_model_public_dataset_train_continue_losses.png)
 ### pretrained_public_mnist_Accuracy.py
 用于检测在公有数据集上是否收敛
@@ -169,6 +173,8 @@ end
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 |private_dataset_train|args|NULL|用于对各个私有模型在各自的私有数据集上进行训练|
+
+
 ![private_model_private_dataset_train_losses](Src/Figure/private_model_private_dataset_train_losses.png)
 
 ### private_model_femnist_Accuracy.py
