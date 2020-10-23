@@ -162,27 +162,40 @@ import matplotlib.pyplot as plt
 # list.append(list2)
 # print(np.array(list).mean(axis=0))
 
+# #
+# from option import args_parser
+# if __name__ == '__main__':
+#     args = args_parser()
+#     print(args.new_collaborative_training)
+#     args.new_collaborative_training = True
+#     print(args.new_collaborative_training)
 #
-from option import args_parser
-if __name__ == '__main__':
-    args = args_parser()
-    print(args.new_collaborative_training)
-    args.new_collaborative_training = True
-    print(args.new_collaborative_training)
-
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
-
-import os, sys
-
-# 列出目录
-print ("目录为: %s"%os.listdir('Src/CollaborativeModel'))
-
-for item in os.listdir('Src/CollaborativeModel'):
-    os.rename(item)
+# #!/usr/bin/python
+# # -*- coding: UTF-8 -*-
+#
+# import os, sys
+#
+# # 列出目录
+# print ("目录为: %s"%os.listdir('Src/CollaborativeModel'))
+#
+# for item in os.listdir('Src/CollaborativeModel'):
+#     os.rename(item)
 # 重命名
 # os.rename("test","test2")
 
 # print "重命名成功。"
 
 # 列出重命名后的目录
+
+def transpose( matrix):
+    new_matrix = []
+    for i in range(len(matrix[0])):
+        matrix1 = []
+        for j in range(len(matrix)):
+            matrix1.append(matrix[j][i])
+        new_matrix.append(matrix1)
+    return new_matrix
+
+marix=[[1,1,1,1],[2,2,2,2],[3,3,3,3]]
+print(marix)
+print(transpose(marix))

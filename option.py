@@ -28,7 +28,7 @@ def args_parser():
     parser.add_argument('--collaborative_epoch',type=int,default=3,help='collaborative_epoch for train on public mnist')
 
     # Collaborative_step
-    parser.add_argument('--Communicationepoch',type=int,default=5,help='Collaorative epoch in Step3')
+    parser.add_argument('--Communicationepoch',type=int,default=3,help='Collaorative epoch in Step3')
 
 
     args = parser.parse_args()

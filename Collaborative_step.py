@@ -3,6 +3,16 @@ from  collaborative_private_model_femnist_balanced import collaborative_private_
 from  collaborative_train_balanced_mnist import collaborative_private_model_mnist_train
 from collaborative_model_femnist_Accuracy import test_accuracy_collaborativemodel
 import matplotlib.pyplot as plt
+
+def transpose( matrix):
+    new_matrix = []
+    for i in range(len(matrix[0])):
+        matrix1 = []
+        for j in range(len(matrix)):
+            matrix1.append(matrix[j][i])
+        new_matrix.append(matrix1)
+    return new_matrix
+
 if __name__ == '__main__':
     args = args_parser()
     accuracy = []
@@ -13,7 +23,7 @@ if __name__ == '__main__':
         collaborative_private_model_mnist_train(args)
         collaborative_private_model_femnist_train(args)
         accuracy.append(eachround_accuracy)
-
+    accuracy = transpose(transpose)
     for i, val in enumerate(accuracy):
         print(val)
         plt.plot(range(len(val)), val)
