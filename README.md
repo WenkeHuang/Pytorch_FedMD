@@ -63,6 +63,7 @@ Revist：每个模型在自己的私有数据集上再训练几个周期
 end
 ## File explanation
 ### data_utils.py
+用于处理MNIST和FEMNIST数据集
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 | get_public_dataset  | args.dataset |data_train,data_test |获得公有数据集MNIST |
@@ -74,7 +75,7 @@ end
 |FEMNIST_iid|dataset,num_users|dict_users|用于生成私有数据集是iid模式的数据标签索引字典|
 |MNIST_random|dataset, epochs|dict_epoch|用于生成用于合作训练的公有训练集，每次5000张，索引字典|
 
-### demo.py
+### models.py
 
 |  Class name   | Input Shape  | Output Shape| Explanation
 |  ----  | ----  |----  |----  |
@@ -82,6 +83,14 @@ end
 | CNN_2layer_fc_model_removelogsoftmax  | 1,28,28 |16,1 |用于模型的交流 移除了Softmax |
 | CNN_3layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
 | CNN_2layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
+
+### utils.py
+一些高频的方法就放一起了
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| get_model_list  | url,modelsindex,models |model_list,model_type_list |用于获取之前训练的模型的权重和对应的类别list|
+| get_model_list_test_acuracy  | url,modelsindex,models |model_list |用于获取之前训练的模型的权重list|
+
 
 ### pretrained_public_mnist_initial.py
 用于初始化各个local的私有模型在MNIST数据集上
@@ -98,6 +107,7 @@ end
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 | train_models  | device,models,modelsindex,train_dataset,lr,optimizer,epochs |NULL |用于训练私有数据集在MNIST数据集上|
+![pretrained_public_mnist_initial_result](Src/Figure/private_model_public_dataset_initial_train_losses.png)
 ### pretrained_public_mnist_continue.py
 用于继续训练各个locla的私有模型在MNIST数据集上，直到模型收敛
 |  Parametes   | default value  | Options| Explanation
@@ -111,8 +121,8 @@ end
 
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
-| get_model_list  | url,modelsindex,models |model_list,model_type_list |用于获取之前训练的模型的权重和对应的类别list|
 |continue_train_models|args|NULL|用于继续训练初始化模型，然后参数详见option.py|
+![private_model_public_dataset_train_continue_losses](Src/Figure/private_model_public_dataset_train_continue_losses.png)
 ### pretrained_public_mnist_Accuracy.py
 用于检测在公有数据集上是否收敛
 |  Parametes   | default value  | Options| Explanation
@@ -123,8 +133,19 @@ end
 
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
-| get_model_list  | url,modelsindex,models |model_list |用于获取之前训练的模型的权重list|
 | test_accuracy_initialmodel  |args |NULL |用于检测第一步public上训练的模型是否准确度ok|
+
+|Model index|pre-trained test accuracies on MNIST|
+|--|--|
+|1|0.9829|
+|2|0.9832|
+|3|0.9856|
+|4|0.9831|
+|5|0.982|
+|6|0.9859|
+|7|0.9861|
+|8|0.983|
+|9|0.9855|
 ### private_model_femnist_balanced.py
 用于继续训练各个local的私有模型在各自的私有FEMNIST数据集上
 |  Parametes   | default value  | Options| Explanation
@@ -133,9 +154,9 @@ end
 | dataset  | 'mnist' |'mnist' |name of dataset |
 | private_dataset  | 'FEMNIST' |'FEMNIST' |name of private dataset |
 | initialurl  | 'Src\Model' |String  |place to save the initial model |
-| privateurl  | 'Src\Model' |String  |place to save the private model which means continue train....... |
+| privateurl  | 'Src\PrivateModel' |String  |place to save the private model which means continue train....... |
 |new_private_training|True|True,False|whether train model from initial condition|
-| continue_epoch  | 10 |int number |number of epoch to continue |
+| privateepoch  | 20 |int number |number of epoch to private train |
 | lr  | 0.01 |float number |learning rate |
 | optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
 
@@ -147,6 +168,45 @@ end
 
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
-| get_model_list  | url,modelsindex,models |model_list,model_type_list |用于获取之前训练的模型的权重和对应的类别list|
 |private_dataset_train|args|NULL|用于对各个私有模型在各自的私有数据集上进行训练|
+![private_model_private_dataset_train_losses](Src/Figure/private_model_private_dataset_train_losses.png)
+
+### private_model_femnist_Accuracy.py
+用于检测在各自私有数据集上是否收敛
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| privateurl  | 'Src\PrivateModel' |String  |place to save the private model  |
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| test_accuracy_privateinitialmodel  |args |NULL |用于检测私有训练的模型是否准确度ok|
+
+|Model index|private model test accuracies on FEMNIST|
+|--|--|
+|0|0.4608333333333333|
+|1|0.5616666666666666|
+|2| 0.498125|
+|3|0.43604166666666666|
+|4|0.5135416666666667|
+|5|0.5397916666666667|
+|6|0.39479166666666665|
+|7|0.4725|
+|8| 0.398125|
+|9| 0.5091666666666667
+
+**假设数据不存在阻塞**
+|Model index|private model test accuracies on FEMNIST|
+|--|--|
+|0|0.89|
+|1|0.8835416666666667|
+|2| 0.88|
+|3| 0.915|
+|4|0.9170833333333334|
+|5|0.881875|
+|6|0.8975|
+|7|0.893125|
+|8| 0.8822916666666667|
+|9| 0.9177083333333333|
 
