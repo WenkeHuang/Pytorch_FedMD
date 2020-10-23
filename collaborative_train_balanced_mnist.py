@@ -5,15 +5,7 @@ import torch
 from torch.utils.data import DataLoader,Dataset
 from torch import nn
 import matplotlib.pyplot as plt
-import numpy as np
-class args:
-    gpu =1
-    dataset ='mnist'
-    url = 'Src\PrivateModel'
-    epoch = 5
-    lr = 0.01
-    optimizer ='sgd'
-    client_number = 10
+
 
 def get_model_list(url,modelsindex,models):
     model_list = []
@@ -43,7 +35,7 @@ class DatasetSplit(Dataset):
         image,label = self.dataset[self.idxs[item]]
         return torch.tensor(image),torch.tensor(label)
 
-if __name__ == '__main__':
+def collaborative_private_model_mnist_train(args):
 
     device ='cuda' if args.gpu else 'cpu'
     # 用于初始化模型的部分
@@ -51,24 +43,24 @@ if __name__ == '__main__':
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
           "3_layer_CNN": CNN_3layer_fc_model}
     modelsindex = ["2_layer_CNN","3_layer_CNN"]
-    model_list,model_type_list = get_model_list(args.url,modelsindex,models)
-
-    epoch_groups = MNIST_random(train_dataset,args.epoch)
+    if args.new_collaborative_training:
+        model_list,model_type_list = get_model_list(args.privateurl,modelsindex,models)
+    else:
+        model_list,model_type_list = get_model_list(args.Collaborativeurl,modelsindex,models)
+    epoch_groups = MNIST_random(train_dataset,args.collaborative_epoch)
 
     train_loss = []
     test_accuracy = []
-    for i in range(args.client_number):
+    for i in range(args.user_number):
         train_loss.append([])
-    for i in range(args.client_number):
+    for i in range(args.user_number):
         test_accuracy.append([])
 
 
-    for epoch in range(args.epoch):
-        # print(epoch)
-        # print(epoch_groups[epoch])
+    for epoch in range(args.collaborative_epoch):
 
         train_batch_loss = []
-        for i in range(args.client_number):
+        for i in range(args.user_number):
             train_batch_loss.append([])
 
         trainloader = DataLoader(DatasetSplit(train_dataset,list(epoch_groups[epoch])),batch_size=128,shuffle=True)
@@ -122,3 +114,9 @@ if __name__ == '__main__':
     plt.show()
     print('End Public Training')
 
+
+
+from option import args_parser
+if __name__ == '__main__':
+    args = args_parser()
+    collaborative_private_model_mnist_train(args)

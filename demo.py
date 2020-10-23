@@ -162,14 +162,27 @@ import matplotlib.pyplot as plt
 # list.append(list2)
 # print(np.array(list).mean(axis=0))
 
-sum = []
-for i in range(2):
-    sum.append([])
-    for j in range(10):
-        sum[i].append(j)
+#
+from option import args_parser
+if __name__ == '__main__':
+    args = args_parser()
+    print(args.new_collaborative_training)
+    args.new_collaborative_training = True
+    print(args.new_collaborative_training)
 
-print(sum)
-for index in range(len(sum)):
-    print(sum[index])
-    for item in range(sum[index]):
-        print(item)
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+import os, sys
+
+# 列出目录
+print ("目录为: %s"%os.listdir('Src/CollaborativeModel'))
+
+for item in os.listdir('Src/CollaborativeModel'):
+    os.rename(item)
+# 重命名
+# os.rename("test","test2")
+
+# print "重命名成功。"
+
+# 列出重命名后的目录

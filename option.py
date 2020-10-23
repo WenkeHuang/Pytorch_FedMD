@@ -21,6 +21,16 @@ def args_parser():
     parser.add_argument('--private_dataset',type=str,default='FEMNIST',help='private dataset for each client')
     parser.add_argument('--privateurl',type=str,default='Src\PrivateModel',help='private model location')
     parser.add_argument('--new_private_training',type=bool,default=True,help='whether train model from initial condition')
+
+    # Collaborative_private_model_femnist_balanced
+    parser.add_argument('--new_collaborative_training',type=bool,default=False,help='whether train model from initial condition')
+    parser.add_argument('--Collaborativeurl',type=str,default='Src\CollaborativeModel',help='collaborative model location')
+    parser.add_argument('--collaborative_epoch',type=int,default=3,help='collaborative_epoch for train on public mnist')
+
+    # Collaborative_step
+    parser.add_argument('--Communicationepoch',type=int,default=20,help='Collaorative epoch in Step3')
+
+
     args = parser.parse_args()
 
 
