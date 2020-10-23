@@ -84,7 +84,7 @@ end
 | CNN_2layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
 
 ### pretrained_public_mnist_initial.py
-用于初始化各个local的私有模型在MNIST数据集上，直到模型收敛~
+用于初始化各个local的私有模型在MNIST数据集上
 
 |  Parametes   | default value  | Options| Explanation
 |  ----  | ----  |----  |----  |
@@ -93,15 +93,23 @@ end
 | user_number  | 1 |0，1 |number of user join in Federated Learning|
 | lr  | 0.01 |float number |learning rate |
 | optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
-| epoch  | 10 |int number |name of dataset |
+| epoch  | 10 |int number |number of epoch to train |
 
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
 | train_models  | device,models,modelsindex,train_dataset,lr,optimizer,epochs |NULL |用于训练私有数据集在MNIST数据集上|
+### pretrained_public_mnist_continue.py
+用于继续训练各个locla的私有模型在MNIST数据集上，直到模型收敛
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| initialurl  | 'Src\Model' |String  |place to save the initial model |
+| continue_epoch  | 10 |int number |number of epoch to continue |
+| lr  | 0.01 |float number |learning rate |
+| optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
 
-# gpu = 1
-# dataset = 'mnist'
-# user_number = 10
-# lr = 0.01
-# optimzier = 'sgd'
-# epoch = 5
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| get_model_list  | url,modelsindex,models |model_list,model_type_list |用于获取之前训练的模型的权重和对应的类别list|
+|continue_train_models|args|NULL|用于继续训练初始化模型，然后参数详见option.py|

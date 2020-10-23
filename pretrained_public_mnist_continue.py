@@ -27,15 +27,15 @@ def get_model_list(url,modelsindex,models):
             net.load_state_dict(torch.load(os.path.join(root, name)))
             model_list.append(net)
     return model_list,model_type_list
-if __name__ == '__main__':
 
-    device ='cuda' if args.gpu else 'cpu'
+def continue_train_models(args):
+    device = 'cuda' if args.gpu else 'cpu'
     # 用于初始化模型的部分
-    train_dataset,test_dataset = get_public_dataset(args)
+    train_dataset, test_dataset = get_public_dataset(args)
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
-          "3_layer_CNN": CNN_3layer_fc_model}
-    modelsindex = ["2_layer_CNN","3_layer_CNN"]
-    model_list,model_type_list = get_model_list(args.initialurl,modelsindex,models)
+              "3_layer_CNN": CNN_3layer_fc_model}
+    modelsindex = ["2_layer_CNN", "3_layer_CNN"]
+    model_list, model_type_list = get_model_list(args.initialurl, modelsindex, models)
 
     private_model_public_dataset_train_losses = []
     for n, model in enumerate(model_list):
@@ -44,11 +44,11 @@ if __name__ == '__main__':
         model.train()
         if args.optimizer == 'sgd':
             optimizer = torch.optim.SGD(model.parameters(), lr=args.lr,
-                                    momentum=0.5)
+                                        momentum=0.5)
         elif args.optimizer == 'adam':
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,
-                                     weight_decay=1e-4)
-        trainloader = DataLoader(train_dataset,batch_size=512,shuffle=True)
+                                         weight_decay=1e-4)
+        trainloader = DataLoader(train_dataset, batch_size=512, shuffle=True)
         criterion = nn.NLLLoss().to(device)
         train_epoch_losses = []
         print('Begin Public Training')
@@ -56,32 +56,39 @@ if __name__ == '__main__':
 
             train_batch_losses = []
             for batch_idx, (images, labels) in enumerate(trainloader):
-                images,labels = images.to(device),labels.to(device)
+                images, labels = images.to(device), labels.to(device)
                 optimizer.zero_grad()
                 outputs = model(images)
-                loss = criterion(outputs,labels)
+                loss = criterion(outputs, labels)
                 loss.backward()
                 optimizer.step()
-                if batch_idx % 50 ==0:
+                if batch_idx % 50 == 0:
                     print('Local Model {} Type {} Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                        n,model_type_list[n],epoch + 1, batch_idx * len(images), len(trainloader.dataset),
-                        100. * batch_idx / len(trainloader), loss.item()))
+                        n, model_type_list[n], epoch + 1, batch_idx * len(images), len(trainloader.dataset),
+                                               100. * batch_idx / len(trainloader), loss.item()))
                 train_batch_losses.append(loss.item())
-            loss_avg = sum(train_batch_losses)/len(train_batch_losses)
+            loss_avg = sum(train_batch_losses) / len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
 
-        torch.save(model.state_dict(),'Src/Model/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.epoch))
+        torch.save(model.state_dict(),
+                   'Src/Model/LocalModel{}Type{}Epoch{}.pkl'.format(n, model_type_list[n], args.epoch))
         private_model_public_dataset_train_losses.append(train_epoch_losses)
 
     plt.figure()
-    for i,val in enumerate(private_model_public_dataset_train_losses):
+    for i, val in enumerate(private_model_public_dataset_train_losses):
         print(val)
-        plt.plot(range(len(val)),val)
+        plt.plot(range(len(val)), val)
     plt.xlabel('epoches')
     plt.ylabel('Train loss')
     plt.savefig('Src/Figure/private_model_public_dataset_train_continue_losses.png')
     plt.show()
     print('End Public Training')
+
+from option import args_parser
+if __name__ == '__main__':
+    args = args_parser()
+    continue_train_models(args)
+
 
 
 
