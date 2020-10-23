@@ -82,8 +82,26 @@ end
 | CNN_2layer_fc_model_removelogsoftmax  | 1,28,28 |16,1 |用于模型的交流 移除了Softmax |
 | CNN_3layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
 | CNN_2layer_fc_model  | 1,28,28 |16,1 |用于模拟local的模型 |
+
 ### pretrained_public_mnist_initial.py
+用于初始化各个local的私有模型在MNIST数据集上，直到模型收敛~
+
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| user_number  | 1 |0，1 |number of user join in Federated Learning|
+| lr  | 0.01 |float number |learning rate |
+| optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
+| epoch  | 10 |int number |name of dataset |
+
 |  Function name   | Input Parameters  | Output Parameters| Explanation
 |  ----  | ----  |----  |----  |
-| 单元格  | 单元格 |单元格 |单元格 |
-| 单元格  | 单元格 |单元格 |单元格 |
+| train_models  | device,models,modelsindex,train_dataset,lr,optimizer,epochs |NULL |用于训练私有数据集在MNIST数据集上|
+
+# gpu = 1
+# dataset = 'mnist'
+# user_number = 10
+# lr = 0.01
+# optimzier = 'sgd'
+# epoch = 5

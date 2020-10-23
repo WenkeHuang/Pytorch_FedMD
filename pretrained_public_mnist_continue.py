@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 class args:
     gpu =1
     dataset ='mnist'
-    url = 'Src\Model'
-    epoch = 10
+    initialurl = 'Src\Model'
+    continue_epoch = 10
     lr = 0.01
     optimizer ='sgd'
 
@@ -35,9 +35,7 @@ if __name__ == '__main__':
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
           "3_layer_CNN": CNN_3layer_fc_model}
     modelsindex = ["2_layer_CNN","3_layer_CNN"]
-    model_list,model_type_list = get_model_list(args.url,modelsindex,models)
-
-
+    model_list,model_type_list = get_model_list(args.initialurl,modelsindex,models)
 
     private_model_public_dataset_train_losses = []
     for n, model in enumerate(model_list):
@@ -54,7 +52,8 @@ if __name__ == '__main__':
         criterion = nn.NLLLoss().to(device)
         train_epoch_losses = []
         print('Begin Public Training')
-        for epoch in range(args.epoch):
+        for epoch in range(args.continue_epoch):
+
             train_batch_losses = []
             for batch_idx, (images, labels) in enumerate(trainloader):
                 images,labels = images.to(device),labels.to(device)
@@ -70,8 +69,10 @@ if __name__ == '__main__':
                 train_batch_losses.append(loss.item())
             loss_avg = sum(train_batch_losses)/len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
+
         torch.save(model.state_dict(),'Src/Model/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.epoch))
         private_model_public_dataset_train_losses.append(train_epoch_losses)
+
     plt.figure()
     for i,val in enumerate(private_model_public_dataset_train_losses):
         print(val)

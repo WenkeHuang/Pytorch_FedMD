@@ -5,18 +5,9 @@ import random
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
-class args:
-    gpu =1
-    dataset ='mnist'
-    user_number = 10
-    lr = 0.01
-    optimzier ='sgd'
-    epoch = 5
-
-def train_models(device,models,modelsindex,train_dataset,test_dataset,lr,optimizer,epochs):
+def train_models(device,models,modelsindex,train_dataset,lr,optimizer,epochs):
     '''
     Train an array of models on the same dataset.
-    We use early termination to speed up training.
     '''
     private_model_public_dataset_train_losses = []
     for n, model in enumerate(models):
@@ -31,7 +22,6 @@ def train_models(device,models,modelsindex,train_dataset,test_dataset,lr,optimiz
             optimizer = torch.optim.Adam(model.parameters(), lr=lr,
                                      weight_decay=1e-4)
         trainloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-        # batch_size = 64 打乱 True
         criterion = torch.nn.NLLLoss().to(device)
         train_epoch_losses = []
         print('Begin Public Training')
@@ -44,6 +34,7 @@ def train_models(device,models,modelsindex,train_dataset,test_dataset,lr,optimiz
                 loss = criterion(outputs,labels)
                 loss.backward()
                 optimizer.step()
+
                 if batch_idx % 50 ==0:
                     print('Local Model {} Type {} Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                         n,modelsindex[n],epoch + 1, batch_idx * len(images), len(trainloader.dataset),
@@ -51,37 +42,43 @@ def train_models(device,models,modelsindex,train_dataset,test_dataset,lr,optimiz
                 train_batch_losses.append(loss.item())
             loss_avg = sum(train_batch_losses)/len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
+
         torch.save(model.state_dict(),'Src/Model/LocalModel{}Type{}Epoch{}.pkl'.format(n,modelsindex[n],epochs))
         private_model_public_dataset_train_losses.append(train_epoch_losses)
+
     plt.figure()
     for i,val in enumerate(private_model_public_dataset_train_losses):
         print(val)
         plt.plot(range(len(val)),val)
     plt.xlabel('epoches')
     plt.ylabel('Train loss')
-    plt.savefig('Src/Figure/private_model_public_dataset_train_losses.png')
+    plt.savefig('Src/Figure/private_model_public_dataset_initial_train_losses.png')
     plt.show()
     print('End Public Training')
 
+from option import args_parser
 
 if __name__ == '__main__':
 
-    # if args.gpu:
-    #     torch.cuda.set_device(args.gpu)
+    args = args_parser()
     device ='cuda' if args.gpu else 'cpu'
 
     # 用于初始化模型的部分
-    train_dataset,test_dataset = get_public_dataset(args)
+    train_dataset,_ = get_public_dataset(args)
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
           "3_layer_CNN": CNN_3layer_fc_model}
     modelsindex = ["2_layer_CNN","3_layer_CNN"]
     pretrain_models = []
     pretrain_modelsindex = []
     for epoch in range(args.user_number):
-        # 给每个local一个不同的模型结构
+        # 随机给每个local一个不同的模型结构
         tempindex = random.randint(0,1)
+        # 添加到索引list中
         pretrain_modelsindex.append(tempindex)
+        # 搞到对应的模型
         tempmodel = models[modelsindex[tempindex]]()
+        # 添加到model list中
         pretrain_models.append(tempmodel)
-    train_models(device,pretrain_models,pretrain_modelsindex,train_dataset,test_dataset,args.lr,args.optimzier,args.epoch)
+
+    train_models(device,pretrain_models,pretrain_modelsindex,train_dataset,args.lr,args.optimzier,args.epoch)
 
