@@ -61,3 +61,9 @@ Digest：参与者训练fk模型 去接近 在公有数据集上大家的平均�
 Revist：每个模型在自己的私有数据集上再训练几个周期
 
 end
+## File explanation
+### pretrained_public_mnist_initial
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| 单元格  | 单元格 |单元格 |单元格 |
+| 单元格  | 单元格 |单元格 |单元格 |

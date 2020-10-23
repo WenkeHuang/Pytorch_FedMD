@@ -1,9 +1,7 @@
 import  torch
 from  data_utils import  get_public_dataset
 from  models import CNN_2layer_fc_model,CNN_3layer_fc_model
-import tqdm
 import random
-from torchsummary import summary
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
