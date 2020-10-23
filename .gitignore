@@ -1,0 +1,8 @@
+/Data/
+/Src/CollaborativeModel/
+/Src/Figure/
+/Src/Model/
+/Src/PrivateModel/
+*.xml
+*.pyc
+*.iml
