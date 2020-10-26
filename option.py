@@ -28,13 +28,13 @@ def args_parser():
     # Collaborative_private_model_femnist_balanced
     parser.add_argument('--new_collaborative_training',type=bool,default=False,help='whether train model from initial condition')
     parser.add_argument('--Collaborativeurl',type=str,default='Src\CollaborativeModel',help='collaborative model location')
-    parser.add_argument('--collaborative_epoch',type=int,default=3,help='collaborative_epoch for train on public mnist')
+    parser.add_argument('--collaborative_epoch',type=int,default=6,help='collaborative_epoch for train on public mnist')
 
     # Collaborative_step
     parser.add_argument('--Communicationepoch',type=int,default=10,help='Collaobrative epoch in Step3')
 
     # collaborative_private_model_femnist_balanced
-    parser.add_argument('--Communication_private_epoch',type=int,default=10,help='Local private training during colaboratiive time')
+    parser.add_argument('--Communication_private_epoch',type=int,default=10 ,help='Local private training during colaboratiive time')
 
     args = parser.parse_args()
 

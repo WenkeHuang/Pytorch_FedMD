@@ -49,7 +49,7 @@ def collaborative_private_model_mnist_train(args):
         for i in range(args.user_number):
             train_batch_loss.append([])
 
-        trainloader = DataLoader(DatasetSplit(train_dataset,list(epoch_groups[epoch])),batch_size=128,shuffle=True)
+        trainloader = DataLoader(DatasetSplit(train_dataset,list(epoch_groups[epoch])),batch_size=256,shuffle=True)
 
         for batch_idx, (images, labels) in enumerate(trainloader):
             images,labels = images.to(device),labels.to(device)
