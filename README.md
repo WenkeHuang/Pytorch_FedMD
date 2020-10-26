@@ -109,6 +109,8 @@ end
 | train_models  | device,models,modelsindex,train_dataset,lr,optimizer,epochs |NULL |用于训练私有数据集在MNIST数据集上|
 
 
+由于这里batch size设置小了，所以有点毛病
+
 ![pretrained_public_mnist_initial_result](Src/Figure/private_model_public_dataset_initial_train_losses.png)
 ### pretrained_public_mnist_continue.py
 用于继续训练各个locla的私有模型在MNIST数据集上，直到模型收敛
