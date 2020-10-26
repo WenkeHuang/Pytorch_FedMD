@@ -53,17 +53,24 @@ def collaborative_private_model_mnist_train(args):
 
         for batch_idx, (images, labels) in enumerate(trainloader):
             images,labels = images.to(device),labels.to(device)
+            # labels.shape torch.Size([128])
             temp_sum_result = []
             # Make output together
             for n, model in enumerate(model_list):
-                model.to(device)
-                model.train()
-                outputs = model(images)
-                _,pred_labels = torch.max(outputs,1)
-                pred_labels = pred_labels.view(-1)
-                temp_sum_result.append(pred_labels)
-            temp_sum_result = torch.stack(temp_sum_result)
+                with torch.no_grad():
+                    model.to(device)
+                    model.eval()
+                    outputs = model(images)
+                    pred_labels = outputs
+                    # print(pred_labels.shape) # torch.Size([128, 16])
+                    # _,pred_labels = torch.max(outputs,1)
+                    # pred_labels = pred_labels.view(-1)
+                    # print(pred_labels.shape) # torch.Size([2048])
+                    temp_sum_result.append(pred_labels)
+            temp_sum_result = torch.stack(temp_sum_result) # torch.Size([10, 128, 16])
+            # print(temp_sum_result.shape)
             labels = torch.mean(temp_sum_result.float(),dim=0) # get the output
+            # print(labels.shape) # torch.Size([128, 16])
             labels = labels.type(torch.LongTensor)
             labels = labels.to(device)
             for n,model in enumerate (model_list):
@@ -75,9 +82,9 @@ def collaborative_private_model_mnist_train(args):
                 elif args.optimizer == 'adam':
                     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,
                                                  weight_decay=1e-4)
-                criterion = nn.NLLLoss().to(device)
+                criterion = nn.L1Loss(size_average=None, reduce=None, reduction='mean').to(device)
                 optimizer.zero_grad()
-                outputs = model(images)
+                outputs = model(images) # torch.Size([128, 16])
                 loss = criterion(outputs,labels)
                 loss.backward()
                 optimizer.step()

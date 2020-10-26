@@ -40,6 +40,4 @@ def test_accuracy_initialmodel(args):
 from option import args_parser
 if __name__ == '__main__':
     args = args_parser()
-    # if args.gpu:
-    #     torch.cuda.set_device(args.gpu)
     test_accuracy_initialmodel(args)

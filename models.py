@@ -34,7 +34,7 @@ class CNN_3layer_fc_model(nn.Module):
         x = x.view(x.shape[0], -1)  # 展开
         # print(x.shape)
         x = self.FC1(x)
-        return F.log_softmax(x,dim=1)
+        return F.softmax(x,dim=1)
 
 class CNN_2layer_fc_model(nn.Module):
     def __init__(self):
@@ -61,7 +61,7 @@ class CNN_2layer_fc_model(nn.Module):
         # (b, in_f) = x.shape  # 查看卷积层输出的tensor平铺后的形状
         # self.FC = nn.Linear(in_f, 10)  # 全链接层
         x = self.FC1(x)
-        return F.log_softmax(x,dim=1)
+        return F.softmax(x,dim=1)
 
 
 

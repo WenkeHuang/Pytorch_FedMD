@@ -14,7 +14,7 @@ def test_accuracy_privateinitialmodel(args):
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
               "3_layer_CNN": CNN_3layer_fc_model}
     modelsindex = ["2_layer_CNN", "3_layer_CNN"]
-    model_list = get_model_list_test_acuracy(args.Collaborativeurl, modelsindex, models)
+    model_list = get_model_list_test_acuracy(args.privateurl, modelsindex, models)
     accuracy_list = []
     for n, model in enumerate(model_list):
         print('Test accuracy of Local Model {}'.format(n))

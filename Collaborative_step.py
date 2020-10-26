@@ -24,6 +24,9 @@ if __name__ == '__main__':
         collaborative_private_model_mnist_train(args)
         collaborative_private_model_femnist_train(args)
         accuracy.append(eachround_accuracy)
+    eachround_accuracy = []
+    eachround_accuracy = test_accuracy_collaborativemodel(args)
+    accuracy.append(eachround_accuracy)
     accuracy = transpose(accuracy)
 
     for i, val in enumerate(accuracy):

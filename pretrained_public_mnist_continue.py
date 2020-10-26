@@ -32,7 +32,6 @@ def continue_train_models(args):
         train_epoch_losses = []
         print('Begin Public Training')
         for epoch in range(args.continue_epoch):
-
             train_batch_losses = []
             for batch_idx, (images, labels) in enumerate(trainloader):
                 images, labels = images.to(device), labels.to(device)

@@ -8,8 +8,8 @@ def args_parser():
     parser.add_argument('--gpu',type=int,default=1,help="choose to use GPU or CPU")
     parser.add_argument('--dataset',type=str,default='mnist',help='name of dataset')
     parser.add_argument('--user_number',type=int,default=10,help='number of user join in Federated Learning')
-    parser.add_argument('--lr',type=float,default=0.01,help='learning rate')
-    parser.add_argument('--optimizer',type=str,default='sgd',help='type of optimizer')
+    parser.add_argument('--lr',type=float,default=0.001,help='learning rate')
+    parser.add_argument('--optimizer',type=str,default='adam',help='type of optimizer')
     parser.add_argument('--epoch',type=int,default=10,help='training epoch')
 
     # pretrained_public_mnist_continue
@@ -23,7 +23,7 @@ def args_parser():
     parser.add_argument('--privateepoch',type=int,default=20,help='training epoch')
     parser.add_argument('--private_dataset',type=str,default='FEMNIST',help='private dataset for each client')
     parser.add_argument('--privateurl',type=str,default='Src\PrivateModel',help='private model location')
-    parser.add_argument('--new_private_training',type=bool,default=True,help='whether train model from initial condition')
+    parser.add_argument('--new_private_training',type=bool,default=False,help='whether train model from initial condition')
 
     # Collaborative_private_model_femnist_balanced
     parser.add_argument('--new_collaborative_training',type=bool,default=False,help='whether train model from initial condition')
