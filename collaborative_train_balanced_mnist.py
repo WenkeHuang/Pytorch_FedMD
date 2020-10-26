@@ -26,8 +26,8 @@ def collaborative_private_model_mnist_train(args):
     device ='cuda' if args.gpu else 'cpu'
     # 用于初始化模型的部分
     train_dataset,test_dataset = get_public_dataset(args)
-    models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
-          "3_layer_CNN": CNN_3layer_fc_model}
+    models = {"2_layer_CNN": CNN_2layer_fc_model_removelogsoftmax,  # 字典的函数类型
+          "3_layer_CNN": CNN_3layer_fc_model_removelogsoftmax}
     modelsindex = ["2_layer_CNN","3_layer_CNN"]
     if args.new_collaborative_training:
         model_list,model_type_list = get_model_list(args.privateurl,modelsindex,models)
@@ -57,7 +57,7 @@ def collaborative_private_model_mnist_train(args):
             # Make output together
             for n, model in enumerate(model_list):
                 model.to(device)
-                model.eval()
+                model.train()
                 outputs = model(images)
                 _,pred_labels = torch.max(outputs,1)
                 pred_labels = pred_labels.view(-1)
