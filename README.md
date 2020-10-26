@@ -267,7 +267,7 @@ end
 
 ![collaborative_private_model_private_dataset_train_losses](Src/Figure/collaborative_private_model_private_dataset_train_losses.png)
 
-### private_model_femnist_Accuracy.py
+### collaborative_model_femnist_Accuracy.py
 用于检测在各自私有数据集上是否收敛
 |  Parametes   | default value  | Options| Explanation
 |  ----  | ----  |----  |----  |
