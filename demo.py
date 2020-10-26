@@ -187,15 +187,25 @@ import matplotlib.pyplot as plt
 
 # 列出重命名后的目录
 
-def transpose( matrix):
-    new_matrix = []
-    for i in range(len(matrix[0])):
-        matrix1 = []
-        for j in range(len(matrix)):
-            matrix1.append(matrix[j][i])
-        new_matrix.append(matrix1)
-    return new_matrix
+# def transpose( matrix):
+#     new_matrix = []
+#     for i in range(len(matrix[0])):
+#         matrix1 = []
+#         for j in range(len(matrix)):
+#             matrix1.append(matrix[j][i])
+#         new_matrix.append(matrix1)
+#     return new_matrix
+#
+# marix=[[1,1,1,1],[2,2,2,2],[3,3,3,3]]
+# print(marix)
+# print(transpose(marix)
+#
+# )
 
-marix=[[1,1,1,1],[2,2,2,2],[3,3,3,3]]
-print(marix)
-print(transpose(marix))
+from  data_utils import  get_private_dataset_balanced,FEMNIST_iid
+
+from option import args_parser
+if __name__ == '__main__':
+    args = args_parser()
+    train_dataset, test_dataset = get_private_dataset_balanced(args)
+    user_groups = FEMNIST_iid(train_dataset, args.user_number)

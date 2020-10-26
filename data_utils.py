@@ -132,15 +132,33 @@ def get_private_dataset_balanced(args):
     return  data_train,data_test
 
 import  numpy as np
+import os
+from option import args_parser
+
+
 
 def FEMNIST_iid(dataset,num_users):
-    num_item = int(len(dataset)/num_users)
-    num_item = 20 # 用于达到作者目的！
-    dict_users, all_idxs = {},[i for i in range(len(dataset))]
-    for i in range(num_users):
-        dict_users[i] = set(np.random.choice(all_idxs,num_item,replace=False))
-        all_idxs = list(set(all_idxs)-dict_users[i])
-    return dict_users
+    args = args_parser()
+    if os.path.exists(args.private_dataset_index):
+        print('private_dataset_index exist ~ ')
+        f  = open(args.private_dataset_index,'r')
+        temp = f.read()
+        dict_users =eval(temp)
+        return dict_users
+    else:
+        print('create private_dataset_index ~ ')
+        num_item = int(len(dataset) / num_users)
+        num_item = 20  # 用于达到作者目的！
+        dict_users, all_idxs = {}, [i for i in range(len(dataset))]
+        for i in range(num_users):
+            dict_users[i] = set(np.random.choice(all_idxs, num_item, replace=False))
+            all_idxs = list(set(all_idxs) - dict_users[i])
+        f = open(args.private_dataset_index,'w')
+        f.write(str(dict_users))
+        f.close()
+        return dict_users
+
+
 
 def MNIST_random(dataset,epochs):
     num_item = 5000

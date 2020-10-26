@@ -216,3 +216,78 @@ end
 |8| 0.8822916666666667|
 |9| 0.9177083333333333|
 
+
+### collaborative_train_balanced_mnist.py
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| private_dataset  | 'FEMNIST' |'FEMNIST' |name of private dataset |
+| Collaborativeurl  | 'Src\CollaborativeModel' |String  |place to save the Collaborative model |
+| privateurl  | 'Src\PrivateModel' |String  |place to save the private model which means continue train....... |
+|new_collaborative_training|True|True,False|whether train model from initial condition|
+| collaborative_epoch  | 5 |int number |number of epoch to collaborative train on Public|
+| lr  | 0.01 |float number |learning rate |
+| optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
+
+
+|  Class name   | Explanation
+|  ---- |----  |
+| DatasetSplit  |用于切割FEMNIST根据对应的索引|
+
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+|collaborative_private_model_femnist_train|args|NULL|用于对各个私有模型在公有数据集上一期合作训练|
+
+![collaborative_train_losses](Src/Figure/collaborative_train_losses.png)
+### collaborative_private_model_femnist_balanced.py
+用于继续训练各个local的私有模型在各自的私有FEMNIST数据集上--Collaborative Training phase
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| private_dataset  | 'FEMNIST' |'FEMNIST' |name of private dataset |
+| Collaborativeurl  | 'Src\CollaborativeModel' |String  |place to save the Collaborative model |
+| Communication_private_epoch  | 10 |int number |Local private training during colaboratiive time |
+| lr  | 0.01 |float number |learning rate |
+| optimizer  | 'sgd' |'sgd','adam'|type of optimizer |
+
+
+|  Class name   | Explanation
+|  ---- |----  |
+| DatasetSplit  |用于切割FEMNIST根据对应的索引|
+
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+|collaborative_private_model_femnist_train|args|NULL|用于对各个私有模型在各自的私有数据集上进行训练|
+
+
+
+![collaborative_private_model_private_dataset_train_losses](Src/Figure/collaborative_private_model_private_dataset_train_losses.png)
+
+### private_model_femnist_Accuracy.py
+用于检测在各自私有数据集上是否收敛
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| gpu  | 1 |0，1 |choose to use GPU or CPU |
+| dataset  | 'mnist' |'mnist' |name of dataset |
+| Collaborativeurl  | 'Src\CollaborativeModel' |String  |place to save the Collaborative model |
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| test_accuracy_collaborativemodel  |args |accuracy_list |用于检测合作训练的模型是否准确度ok|
+
+### Collaborative_step.py
+用于模拟交流过程
+|  Parametes   | default value  | Options| Explanation
+|  ----  | ----  |----  |----  |
+| Communicationepoch  | 10 |int  |Collaobrative epoch in Step3|
+
+|  Function name   | Input Parameters  | Output Parameters| Explanation
+|  ----  | ----  |----  |----  |
+| transpose  |matrix |matrix |用于旋转矩阵 便于绘图|
+
+
+![communication_round_with_accuracy_on_femnist](Src/Figure/communication_round_with_accuracy_on_femnist.png)

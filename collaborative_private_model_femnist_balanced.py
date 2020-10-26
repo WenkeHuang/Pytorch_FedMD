@@ -46,6 +46,9 @@ def collaborative_private_model_femnist_train(args):
     modelsindex = ["2_layer_CNN", "3_layer_CNN"]
     model_list, model_type_list = get_model_list(args.Collaborativeurl, modelsindex, models)
 
+
+    print('Begin Private Training')
+
     private_model_private_dataset_train_losses = []
     for n, model in enumerate(model_list):
         print('train Local Model {} on Private Dataset'.format(n))
@@ -60,8 +63,7 @@ def collaborative_private_model_femnist_train(args):
         trainloader = DataLoader(DatasetSplit(train_dataset, list(user_groups[n])), batch_size=64, shuffle=True)
         criterion = nn.NLLLoss().to(device)
         train_epoch_losses = []
-        print('Begin Private Training')
-        for epoch in range(args.epoch):
+        for epoch in range(args.Communication_private_epoch):
             train_batch_losses = []
             for batch_idx, (images, labels) in enumerate(trainloader):
                 images, labels = images.to(device), labels.to(device)
@@ -84,6 +86,7 @@ def collaborative_private_model_femnist_train(args):
     for i, val in enumerate(private_model_private_dataset_train_losses):
         print(val)
         plt.plot(range(len(val)), val)
+    plt.title('collaborative_private_model_private_dataset_train_losses')
     plt.xlabel('epoches')
     plt.ylabel('Train loss')
     plt.savefig('Src/Figure/collaborative_private_model_private_dataset_train_losses.png')

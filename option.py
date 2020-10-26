@@ -16,6 +16,9 @@ def args_parser():
     parser.add_argument('--initialurl',type=str,default='Src\Model',help='initial url for saving initial models')
     parser.add_argument('--continue_epoch',type=int,default=10,help='epoch for continuing traning on pretrained model on mnist')
 
+    # data_utils
+    parser.add_argument('--private_dataset_index',type=str,default='Src/private_dataset_index.txt',help='in order to fix the private dataset,beacuse each client has only a few of dataset')
+
     # private_model_femnist_balanced
     parser.add_argument('--privateepoch',type=int,default=20,help='training epoch')
     parser.add_argument('--private_dataset',type=str,default='FEMNIST',help='private dataset for each client')
@@ -28,10 +31,11 @@ def args_parser():
     parser.add_argument('--collaborative_epoch',type=int,default=3,help='collaborative_epoch for train on public mnist')
 
     # Collaborative_step
-    parser.add_argument('--Communicationepoch',type=int,default=3,help='Collaorative epoch in Step3')
+    parser.add_argument('--Communicationepoch',type=int,default=10,help='Collaobrative epoch in Step3')
 
+    # collaborative_private_model_femnist_balanced
+    parser.add_argument('--Communication_private_epoch',type=int,default=10,help='Local private training during colaboratiive time')
 
     args = parser.parse_args()
-
 
     return args

@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader,Dataset
 from torch import nn
 import matplotlib.pyplot as plt
 from utils import get_model_list
+from matplotlib.pyplot import MultipleLocator #从pyplot导入MultipleLocator类，这个类用于设置刻度间隔
 
 class DatasetSplit(Dataset):
     """
@@ -73,9 +74,15 @@ def private_dataset_train(args):
     plt.figure()
     for i,val in enumerate(private_model_private_dataset_train_losses):
         print(val)
-        plt.plot(range(len(val)),val)
+        plt.plot(range(len(val)),val,label='model :'+str(i))
+    plt.legend(loc='best')
+    plt.title('private_model_private_dataset_train_losses')
     plt.xlabel('epoches')
     plt.ylabel('Train loss')
+    x_major_locator = MultipleLocator(1)# 把x轴的刻度间隔设置为1，并存在变量里
+    ax = plt.gca()# ax为两条坐标轴的实例
+    ax.xaxis.set_major_locator(x_major_locator)# 把x轴的主刻度设置为1的倍数
+    plt.xlim(0, args.privateepoch)
     plt.savefig('Src/Figure/private_model_private_dataset_train_losses.png')
     plt.show()
     print('End Private Training')
