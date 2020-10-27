@@ -209,6 +209,3 @@ import matplotlib.pyplot as plt
 #     train_dataset, test_dataset = get_private_dataset_balanced(args)
 #     user_groups = FEMNIST_iid(train_dataset, args.user_number)
 
-marix=[[1,1,1,1],[2,2,2,2],[3,3,3,3]]
-print(len(marix))
-print(marix.size())

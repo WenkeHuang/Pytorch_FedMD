@@ -154,6 +154,12 @@ def FEMNIST_iid(dataset,num_users):
         f  = open(args.private_dataset_index,'r')
         temp = f.read()
         dict_users =eval(temp)
+        if args.testBestCondition:
+            setvolume = set()
+            for key in dict_users.keys():
+                setvolume = setvolume.union(dict_users[key])
+            for key in dict_users.keys():
+                dict_users[key] = setvolume
         return dict_users
     else:
         print('create private_dataset_index ~ ')
@@ -171,8 +177,6 @@ def FEMNIST_iid(dataset,num_users):
         f.write(str(dict_users))
         f.close()
         return dict_users
-
-
 
 def MNIST_random(dataset,epochs):
     num_item = 5000
@@ -201,3 +205,14 @@ class args:
 #         dict_private_index.setdefault(data_train[i][1], []).append(i)
 #     return dict_private_index
 # print(generateIndex(data_train))
+# args = args_parser()
+# if  os.path.exists(args.private_dataset_index):
+#     print('private_dataset_index exist ~ ')
+#     f  = open(args.private_dataset_index,'r')
+#     temp = f.read()
+#     dict_users =eval(temp)
+#     setvolume = set()
+#     for key in dict_users.keys():
+#         setvolume = setvolume.union(dict_users[key])
+#     for key in dict_users.keys():
+#         dict_users[key]=setvolume
