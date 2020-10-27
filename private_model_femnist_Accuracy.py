@@ -23,7 +23,7 @@ def test_accuracy_privateinitialmodel(args):
         loss, total, correct = 0.0, 0.0, 0.0
         criterion = nn.NLLLoss().to(device)
 
-        testloader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+        testloader = DataLoader(test_dataset, batch_size=128, shuffle=False)
         for batch_idx, (images, labels) in enumerate(testloader):
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)

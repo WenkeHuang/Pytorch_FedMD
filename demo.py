@@ -202,10 +202,13 @@ import matplotlib.pyplot as plt
 #
 # )
 
-from  data_utils import  get_private_dataset_balanced,FEMNIST_iid
+# from  data_utils import  get_private_dataset_balanced,FEMNIST_iid
+# from option import args_parser
+# if __name__ == '__main__':
+#     args = args_parser()
+#     train_dataset, test_dataset = get_private_dataset_balanced(args)
+#     user_groups = FEMNIST_iid(train_dataset, args.user_number)
 
-from option import args_parser
-if __name__ == '__main__':
-    args = args_parser()
-    train_dataset, test_dataset = get_private_dataset_balanced(args)
-    user_groups = FEMNIST_iid(train_dataset, args.user_number)
+marix=[[1,1,1,1],[2,2,2,2],[3,3,3,3]]
+print(len(marix))
+print(marix.size())

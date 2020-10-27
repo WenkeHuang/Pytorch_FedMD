@@ -21,6 +21,21 @@ class DatasetSplit(Dataset):
         image,label = self.dataset[self.idxs[item]]
         return torch.tensor(image),torch.tensor(label)
 
+def list_add(a,b):
+    c = []
+    for i in range(len(a)):
+        d = []
+        for j in range(len(a[i])):
+            d.append(a[i][j]+b[i][j])
+        c.append(d)
+    return c
+
+def get_avg_result(temp_sum_result,num_client):
+    for itemx in range(len(temp_sum_result)):
+        for itemy  in range(len(temp_sum_result[itemx])):
+            temp_sum_result[itemx][itemy] /=num_client
+    return temp_sum_result
+
 def collaborative_private_model_mnist_train(args):
 
     device ='cuda' if args.gpu else 'cpu'
@@ -53,25 +68,37 @@ def collaborative_private_model_mnist_train(args):
 
         for batch_idx, (images, labels) in enumerate(trainloader):
             images,labels = images.to(device),labels.to(device)
-            # labels.shape torch.Size([128])
-            temp_sum_result = []
+            # 初始化存储结果的东西
+            temp_sum_result = [ [] for _ in range(len(labels))]
+            for item in range(len(temp_sum_result)):
+                for i in range(args.output_classes):
+                    temp_sum_result[item].append(0)
+
             # Make output together
             for n, model in enumerate(model_list):
                 with torch.no_grad():
                     model.to(device)
                     model.eval()
                     outputs = model(images)
-                    pred_labels = outputs
+                    pred_labels = outputs.tolist() # 转成list
                     # print(pred_labels.shape) # torch.Size([128, 16])
                     # _,pred_labels = torch.max(outputs,1)
                     # pred_labels = pred_labels.view(-1)
                     # print(pred_labels.shape) # torch.Size([2048])
-                    temp_sum_result.append(pred_labels)
-            temp_sum_result = torch.stack(temp_sum_result) # torch.Size([10, 128, 16])
+                    temp_sum_result = list_add(pred_labels,temp_sum_result) # 把每次的结果都给加到一起
+            #         print(len(temp_sum_result))
+            #         print(len(temp_sum_result[0]))
+            # print(type(temp_sum_result))
+            # print(type(temp_sum_result[0]))
+            # temp_sum_result = torch.stack(temp_sum_result) # torch.Size([10, 128, 16])
+            # temp_sum_result /=args.user_number
             # print(temp_sum_result.shape)
-            labels = torch.mean(temp_sum_result.float(),dim=0) # get the output
+            # labels = torch.mean(temp_sum_result.float(),dim=0) # get the output
             # print(labels.shape) # torch.Size([128, 16])
-            labels = labels.type(torch.LongTensor)
+            temp_sum_result = get_avg_result(temp_sum_result,args.user_number) # 根据参与训练的时候用户把结果除以对应的数量
+            labels = torch.tensor(temp_sum_result)
+            # print(labels.size())
+            # print((labels[0]).size())
             labels = labels.to(device)
             for n,model in enumerate (model_list):
                 model.to(device)

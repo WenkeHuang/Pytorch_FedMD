@@ -49,7 +49,7 @@ def private_dataset_train(args):
         elif args.optimizer == 'adam':
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,
                                      weight_decay=1e-4)
-        trainloader = DataLoader(DatasetSplit(train_dataset,list(user_groups[n])),batch_size=32,shuffle=True)
+        trainloader = DataLoader(DatasetSplit(train_dataset,list(user_groups[n])),batch_size=5,shuffle=True)
         criterion = nn.NLLLoss().to(device)
         train_epoch_losses = []
         print('Begin Private Training')
@@ -69,7 +69,8 @@ def private_dataset_train(args):
                 train_batch_losses.append(loss.item())
             loss_avg = sum(train_batch_losses)/len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
-        torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.privateepoch))
+        torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
+        # torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         private_model_private_dataset_train_losses.append(train_epoch_losses)
     plt.figure()
     for i,val in enumerate(private_model_private_dataset_train_losses):

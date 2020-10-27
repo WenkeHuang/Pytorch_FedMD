@@ -161,10 +161,10 @@ def FEMNIST_iid(dataset,num_users):
         num_class_item = 3  # 用于达到作者目的！
         dict_users = {}
         for i in range(num_users):
-            dict_users[i]=set()
+            dict_users[i]=set() # create the set dictionary
         for i in range(num_users):
             for key in dict.keys():
-                temp = set(np.random.choice(dict[key], num_class_item, replace=False))
+                temp = set(np.random.choice(dict[key], num_class_item, replace=False)) # 样本无重复值
                 dict_users[i] = dict_users[i] | temp
                 dict[key] = list(set(dict[key]) - temp)
         f = open(args.private_dataset_index,'w')
@@ -189,9 +189,11 @@ class args:
 # get_public_dataset(args)
 # init_private_dataset(args)
 # # data_train,data_test = get_private_dataset(args)
+
 # data_train,data_test = get_private_dataset_balanced(args)
 # print(FEMNIST_iid(data_train,10)[9])
-
+# for item in FEMNIST_iid(data_train,10)[9]:
+#     print(data_train[item])
 
 # def generateIndex(dataset):
 #     dict_private_index = {}
