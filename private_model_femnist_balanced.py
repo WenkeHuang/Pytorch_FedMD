@@ -43,6 +43,7 @@ def private_dataset_train(args):
     for n, model in enumerate(model_list):
         print('train Local Model {} on Private Dataset'.format(n))
         model.to(device)
+        model.train()
         if args.optimizer == 'sgd':
             optimizer = torch.optim.SGD(model.parameters(), lr=args.lr,
                                     momentum=0.5)
@@ -54,7 +55,6 @@ def private_dataset_train(args):
         train_epoch_losses = []
         print('Begin Private Training')
         for epoch in range(args.privateepoch):
-            model.train()
             train_batch_losses = []
             for batch_idx, (images, labels) in enumerate(trainloader):
                 images,labels = images.to(device),labels.to(device)
@@ -70,9 +70,6 @@ def private_dataset_train(args):
                 train_batch_losses.append(loss.item())
             loss_avg = sum(train_batch_losses)/len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
-
-            model.eval()
-
         torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         # torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}Epoch{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         private_model_private_dataset_train_losses.append(train_epoch_losses)

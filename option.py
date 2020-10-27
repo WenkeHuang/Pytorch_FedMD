@@ -23,9 +23,8 @@ def args_parser():
     parser.add_argument('--privateepoch',type=int,default=20,help='training epoch')
     parser.add_argument('--private_dataset',type=str,default='FEMNIST',help='private dataset for each client')
     parser.add_argument('--privateurl',type=str,default='Src\PrivateModel',help='private model location')
-    parser.add_argument('--new_private_training',type=bool,default=False,help='whether train model from initial condition')
+    parser.add_argument('--new_private_training',type=bool,default=True,help='whether train model from initial condition')
     parser.add_argument('--testBestCondition',type=bool,default=False,help='test the result with data shared')
-
 
     # Collaborative_private_model_femnist_balanced
     parser.add_argument('--new_collaborative_training',type=bool,default=False,help='whether train model from initial condition')
