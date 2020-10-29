@@ -37,8 +37,8 @@ def private_dataset_train(args):
         model_list,model_type_list = get_model_list(args.initialurl,modelsindex,models)
         #model_list,model_type_list = get_model_list('Src/EmptyModel',modelsindex,models)
     else:
-        model_list,model_type_list = get_model_list(args.privateurl,modelsindex,models)
-        #model_list,model_type_list = get_model_list('Src/EmptyModelFemnist',modelsindex,models)
+        #model_list,model_type_list = get_model_list(args.privateurl,modelsindex,models)
+        model_list,model_type_list = get_model_list('Src/ModelNonIdFemnist',modelsindex,models)
 
 
     private_model_private_dataset_train_losses = []
@@ -58,7 +58,7 @@ def private_dataset_train(args):
         train_epoch_losses = []
         validation_epoch_losses = []
         print('Begin Private Training')
-        earlyStopping = EarlyStopping(patience=5,verbose=True,path='Src/EmptyModelFemnist/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
+        earlyStopping = EarlyStopping(patience=5,verbose=True,path='Src/ModelNonIdFemnist/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         for epoch in range(args.privateepoch):
             model.train()
             train_batch_losses = []
@@ -94,8 +94,6 @@ def private_dataset_train(args):
             if earlyStopping.early_stop:
                 print("Early stopping")
                 break
-
-        # torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         private_model_private_dataset_train_losses.append(train_epoch_losses)
         private_model_private_dataset_validation_losses.append(validation_epoch_losses)
 
@@ -105,14 +103,14 @@ def private_dataset_train(args):
         print(val)
         plt.plot(range(len(val)),val,label='model :'+str(i))
     plt.legend(loc='best')
-    plt.title('private_model_private_dataset_train_demo_losses')
+    plt.title('private_model_private_non_iid_dataset_train_demo_losses')
     plt.xlabel('epoches')
     plt.ylabel('Train loss')
     x_major_locator = MultipleLocator(1)# 把x轴的刻度间隔设置为1，并存在变量里
     ax = plt.gca()# ax为两条坐标轴的实例
     ax.xaxis.set_major_locator(x_major_locator)# 把x轴的主刻度设置为1的倍数
     plt.xlim(0, args.privateepoch)
-    plt.savefig('Src/Figure/private_model_private_dataset_train_demo_losses.png')
+    plt.savefig('Src/Figure/private_model_private_non_iid_dataset_train_demo_losses.png')
     plt.show()
 
     plt.figure()
@@ -120,14 +118,14 @@ def private_dataset_train(args):
         print(val)
         plt.plot(range(len(val)), val, label='model :' + str(i))
     plt.legend(loc='best')
-    plt.title('private_model_private_dataset_validation_demo_losses')
+    plt.title('private_model_private_non_iid_dataset_validation_demo_losses')
     plt.xlabel('epoches')
     plt.ylabel('Validation loss')
     x_major_locator = MultipleLocator(1)  # 把x轴的刻度间隔设置为1，并存在变量里
     ax = plt.gca()  # ax为两条坐标轴的实例
     ax.xaxis.set_major_locator(x_major_locator)  # 把x轴的主刻度设置为1的倍数
     plt.xlim(0, args.privateepoch)
-    plt.savefig('Src/Figure/private_model_private_dataset_validation_demo_losses.png')
+    plt.savefig('Src/Figure/private_model_private_non_iid_dataset_validation_demo_losses.png')
     plt.show()
 
     print('End Private Training')

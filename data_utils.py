@@ -178,6 +178,9 @@ def FEMNIST_iid(dataset,num_users):
         f.close()
         return dict_users
 
+
+    
+
 def MNIST_random(dataset,epochs):
     num_item = 5000
     dict_epoch,all_idxs = {},[i for i in range(len(dataset))]
@@ -238,10 +241,15 @@ class args:
 #     for key in dict_users.keys():
 #         dict_users[key]=setvolume
 import scipy.io as sio
-if __name__ == '__main__':
-    print('tedt ')
-    mat = sio.loadmat('Data/emnist-letters.mat')
-    data = mat['dataset']
+import pandas as pd
+
+def load_EMNIST_data(file, verbose=False, standarized=False):
+    """
+    file should be the downloaded EMNIST file in .mat format.
+    """
+    mat = sio.loadmat(file)
+    data = mat["dataset"]
+
     writer_ids_train = data['train'][0, 0]['writers'][0, 0]
     writer_ids_train = np.squeeze(writer_ids_train)
     X_train = data['train'][0, 0]['images'][0, 0]
@@ -257,3 +265,19 @@ if __name__ == '__main__':
     y_test = data['test'][0, 0]['labels'][0, 0]
     y_test = np.squeeze(y_test)
     y_test -= 1  # y_test is zero-based
+
+    if standarized:
+        X_train = X_train / 255
+        X_test = X_test / 255
+        mean_image = np.mean(X_train, axis=0)
+        X_train -= mean_image
+        X_test -= mean_image
+
+    if verbose == True:
+        print("EMNIST-letter dataset ... ")
+        print("X_train shape :", X_train.shape)
+        print("X_test shape :", X_test.shape)
+        print("y_train shape :", y_train.shape)
+        print("y_test shape :", y_test.shape)
+
+    return X_train, y_train, X_test, y_test, writer_ids_train, writer_ids_test
