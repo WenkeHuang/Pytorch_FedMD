@@ -15,19 +15,20 @@ def test_accuracy_privateinitialmodel(args):
               "3_layer_CNN": CNN_3layer_fc_model}
     modelsindex = ["2_layer_CNN", "3_layer_CNN"]
     model_list = get_model_list_test_acuracy(args.privateurl, modelsindex, models)
+    #model_list = get_model_list_test_acuracy('Src/PrivateModelNew', modelsindex, models)
+    #model_list = get_model_list_test_acuracy('Src/EmptyModelFemnist', modelsindex, models)
+    #model_list = get_model_list_test_acuracy('Src/EmptyModelFemnistandMnist', modelsindex, models)
     accuracy_list = []
     for n, model in enumerate(model_list):
         print('Test accuracy of Local Model {}'.format(n))
         model.to(device)
         model.eval()
         loss, total, correct = 0.0, 0.0, 0.0
-        criterion = nn.NLLLoss().to(device)
 
         testloader = DataLoader(test_dataset, batch_size=128, shuffle=False)
         for batch_idx, (images, labels) in enumerate(testloader):
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
-            batch_loss = criterion(outputs, labels)
             _, pred_labels = torch.max(outputs, 1)
             pred_labels = pred_labels.view(-1)
             correct += torch.sum(torch.eq(pred_labels, labels)).item()

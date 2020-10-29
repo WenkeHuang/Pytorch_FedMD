@@ -2,7 +2,7 @@ from  data_utils import  get_public_dataset, get_private_dataset_balanced,FEMNIS
 from  models import CNN_2layer_fc_model,CNN_3layer_fc_model
 import os
 import torch
-from torch.utils.data import DataLoader,Dataset
+from torch.utils.data import DataLoader,Dataset,ConcatDataset
 from torch import nn
 import matplotlib.pyplot as plt
 from utils import get_model_list,EarlyStopping
@@ -27,6 +27,8 @@ def private_dataset_train(args):
     # 用于初始化模型的部分
     # 获得FEMNIST数据集！
     train_dataset,test_dataset = get_private_dataset_balanced(args)
+    train_MNIST_dataset, _ = get_public_dataset(args)
+
     user_groups = FEMNIST_iid(train_dataset, args.user_number)
 
     models = {"2_layer_CNN": CNN_2layer_fc_model,  # 字典的函数类型
@@ -38,12 +40,14 @@ def private_dataset_train(args):
         #model_list,model_type_list = get_model_list('Src/EmptyModel',modelsindex,models)
     else:
         model_list,model_type_list = get_model_list(args.privateurl,modelsindex,models)
-        #model_list,model_type_list = get_model_list('Src/EmptyModelFemnist',modelsindex,models)
+        #model_list,model_type_list = get_model_list('Src/EmptyModelFemnistandMnist',modelsindex,models)
 
 
     private_model_private_dataset_train_losses = []
     private_model_private_dataset_validation_losses = []
+
     for n, model in enumerate(model_list):
+        train_MNIST_Random_dataset,_ = torch.utils.data.random_split(train_MNIST_dataset, [18,59982])
         print('train Local Model {} on Private Dataset'.format(n))
         model.to(device)
         if args.optimizer == 'sgd':
@@ -52,13 +56,17 @@ def private_dataset_train(args):
         elif args.optimizer == 'adam':
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,
                                      weight_decay=1e-4)
-        trainloader = DataLoader(DatasetSplit(train_dataset,list(user_groups[n])),batch_size=32,shuffle=True)
+        concateDatasetdemo = ConcatDataset([train_MNIST_Random_dataset,DatasetSplit(train_dataset,list(user_groups[n]))])
+        trainloader = DataLoader(concateDatasetdemo,batch_size=40,shuffle=False)
+        # trainloader_MNIST = DataLoader(train_MNIST_Random_dataset,batch_size=5,shuffle=True)
         testloader = DataLoader(test_dataset,batch_size=128, shuffle=True)
         criterion = nn.NLLLoss().to(device)
         train_epoch_losses = []
         validation_epoch_losses = []
         print('Begin Private Training')
-        earlyStopping = EarlyStopping(patience=5,verbose=True,path='Src/EmptyModelFemnist/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
+        earlyStopping = EarlyStopping(patience=5,verbose=True,path='Src/PrivateModelNew/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
+        #earlyStopping = EarlyStopping(patience=5,verbose=True,path='Src/EmptyModelFemnistandMnist/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
+
         for epoch in range(args.privateepoch):
             model.train()
             train_batch_losses = []
@@ -74,6 +82,18 @@ def private_dataset_train(args):
                         n,model_type_list[n],epoch + 1, batch_idx * len(images), len(trainloader.dataset),
                         100. * batch_idx / len(trainloader), loss.item()))
                 train_batch_losses.append(loss.item())
+            # for batch_idx, (images, labels) in enumerate(trainloader_MNIST):
+            #     images,labels = images.to(device),labels.to(device)
+            #     optimizer.zero_grad()
+            #     outputs = model(images)
+            #     loss = criterion(outputs,labels)
+            #     loss.backward()
+            #     optimizer.step()
+            #     if batch_idx % 5 ==0:
+            #         print('Local Model {} Type {} Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+            #             n,model_type_list[n],epoch + 1, batch_idx * len(images), len(trainloader.dataset),
+            #             100. * batch_idx / len(trainloader), loss.item()))
+            #     train_batch_losses.append(loss.item())
             loss_avg = sum(train_batch_losses)/len(train_batch_losses)
             train_epoch_losses.append(loss_avg)
 
@@ -94,8 +114,6 @@ def private_dataset_train(args):
             if earlyStopping.early_stop:
                 print("Early stopping")
                 break
-
-        # torch.save(model.state_dict(),'Src/PrivateModel/LocalModel{}Type{}.pkl'.format(n,model_type_list[n],args.privateepoch))
         private_model_private_dataset_train_losses.append(train_epoch_losses)
         private_model_private_dataset_validation_losses.append(validation_epoch_losses)
 
@@ -105,14 +123,16 @@ def private_dataset_train(args):
         print(val)
         plt.plot(range(len(val)),val,label='model :'+str(i))
     plt.legend(loc='best')
-    plt.title('private_model_private_dataset_train_demo_losses')
+    plt.title('private_model_private_dataset_MNIST_and_FEMNIST_train_losses')
+    #plt.title('private_model_private_dataset_MNIST_and_FEMNIST_train_demo_losses')
     plt.xlabel('epoches')
     plt.ylabel('Train loss')
     x_major_locator = MultipleLocator(1)# 把x轴的刻度间隔设置为1，并存在变量里
     ax = plt.gca()# ax为两条坐标轴的实例
     ax.xaxis.set_major_locator(x_major_locator)# 把x轴的主刻度设置为1的倍数
     plt.xlim(0, args.privateepoch)
-    plt.savefig('Src/Figure/private_model_private_dataset_train_demo_losses.png')
+    plt.savefig('Src/Figure/private_model_private_dataset_MNIST_and_FEMNIST_train_losses.png')
+    #plt.savefig('Src/Figure/private_model_private_dataset_MNIST_and_FEMNIST_train_demo_losses.png')
     plt.show()
 
     plt.figure()
@@ -120,14 +140,16 @@ def private_dataset_train(args):
         print(val)
         plt.plot(range(len(val)), val, label='model :' + str(i))
     plt.legend(loc='best')
-    plt.title('private_model_private_dataset_validation_demo_losses')
+    plt.title('private_model_private_dataset_MNIST_and_FEMNIST_validation_losses')
+    plt.title('private_model_private_dataset_MNIST_and_FEMNIST_validation_demo_losses')
     plt.xlabel('epoches')
     plt.ylabel('Validation loss')
     x_major_locator = MultipleLocator(1)  # 把x轴的刻度间隔设置为1，并存在变量里
     ax = plt.gca()  # ax为两条坐标轴的实例
     ax.xaxis.set_major_locator(x_major_locator)  # 把x轴的主刻度设置为1的倍数
     plt.xlim(0, args.privateepoch)
-    plt.savefig('Src/Figure/private_model_private_dataset_validation_demo_losses.png')
+    plt.savefig('Src/Figure/private_model_private_dataset_MNIST_and_FEMNIST_validation_losses.png')
+    #plt.savefig('Src/Figure/private_model_private_dataset_MNIST_and_FEMNIST_validation_demo_losses.png')
     plt.show()
 
     print('End Private Training')

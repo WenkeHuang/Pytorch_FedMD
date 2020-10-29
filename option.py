@@ -8,9 +8,9 @@ def args_parser():
     parser.add_argument('--gpu',type=int,default=1,help="choose to use GPU or CPU")
     parser.add_argument('--dataset',type=str,default='mnist',help='name of dataset')
     parser.add_argument('--user_number',type=int,default=10,help='number of user join in Federated Learning')
-    parser.add_argument('--lr',type=float,default=0.0001,help='learning rate')
+    parser.add_argument('--lr',type=float,default=0.01,help='learning rate')
     parser.add_argument('--optimizer',type=str,default='adam',help='type of optimizer')
-    parser.add_argument('--epoch',type=int,default=10,help='training epoch')
+    parser.add_argument('--epoch',type=int,default=20,help='training epoch')
 
     # pretrained_public_mnist_continue
     parser.add_argument('--initialurl',type=str,default='Src\Model',help='initial url for saving initial models')

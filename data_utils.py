@@ -186,15 +186,35 @@ def MNIST_random(dataset,epochs):
         all_idxs = list(set(all_idxs)-dict_epoch[i])
     return dict_epoch
 
+
 class args:
     dataset = 'mnist'
     private_dataset = 'FEMNIST'
+    user_number = 10
 
 # get_public_dataset(args)
 # init_private_dataset(args)
 # # data_train,data_test = get_private_dataset(args)
-
+# import torch
+# class DatasetSplit(Dataset):
+#     """
+#     An abstract Dataset class wrapped around Pytorch Dataset class
+#     """
+#     def __init__(self,dataset,idxs):
+#         self.dataset = dataset
+#         self.idxs = [int(i) for i in idxs]
+#     def __len__(self):
+#         return len(self.idxs)
+#
+#     def __getitem__(self, item):
+#         image,label = self.dataset[self.idxs[item]]
+#         return torch.tensor(image),torch.tensor(label)
 # data_train,data_test = get_private_dataset_balanced(args)
+# user_groups = FEMNIST_iid(data_train, args.user_number)
+# trainloader = DataLoader(DatasetSplit(data_train, list(user_groups[1])), batch_size=5, shuffle=True)
+# DataLoader(DatasetSplit(data_train, list(user_groups[0])), batch_size=5, shuffle=True)
+#
+# print(len(trainloader))
 # print(FEMNIST_iid(data_train,10)[9])
 # for item in FEMNIST_iid(data_train,10)[9]:
 #     print(data_train[item])
@@ -205,6 +225,7 @@ class args:
 #         dict_private_index.setdefault(data_train[i][1], []).append(i)
 #     return dict_private_index
 # print(generateIndex(data_train))
+
 # args = args_parser()
 # if  os.path.exists(args.private_dataset_index):
 #     print('private_dataset_index exist ~ ')
@@ -216,3 +237,23 @@ class args:
 #         setvolume = setvolume.union(dict_users[key])
 #     for key in dict_users.keys():
 #         dict_users[key]=setvolume
+import scipy.io as sio
+if __name__ == '__main__':
+    print('tedt ')
+    mat = sio.loadmat('Data/emnist-letters.mat')
+    data = mat['dataset']
+    writer_ids_train = data['train'][0, 0]['writers'][0, 0]
+    writer_ids_train = np.squeeze(writer_ids_train)
+    X_train = data['train'][0, 0]['images'][0, 0]
+    X_train = X_train.reshape((X_train.shape[0], 28, 28), order="F")
+    y_train = data['train'][0, 0]['labels'][0, 0]
+    y_train = np.squeeze(y_train)
+    y_train -= 1  # y_train is zero-based
+
+    writer_ids_test = data['test'][0, 0]['writers'][0, 0]
+    writer_ids_test = np.squeeze(writer_ids_test)
+    X_test = data['test'][0, 0]['images'][0, 0]
+    X_test = X_test.reshape((X_test.shape[0], 28, 28), order="F")
+    y_test = data['test'][0, 0]['labels'][0, 0]
+    y_test = np.squeeze(y_test)
+    y_test -= 1  # y_test is zero-based

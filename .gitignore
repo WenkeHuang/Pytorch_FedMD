@@ -7,3 +7,8 @@
 *.iml
 /Src/temp/
 /venv/
+/Src/PrivateModelTemp/
+/Src/EmptyModel/
+/Src/EmptyModelFemnist/
+/Src/EmptyModelFemnistandMnist/
+/Src/PrivateModelNew/
