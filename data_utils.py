@@ -178,8 +178,37 @@ def FEMNIST_iid(dataset,num_users):
         f.close()
         return dict_users
 
+def FEMNIST_iid(dataset,num_users):
+    args = args_parser()
+    if  os.path.exists(args.private_dataset_index):
+        print('private_dataset_index exist ~ ')
+        f  = open(args.private_dataset_index,'r')
+        temp = f.read()
+        dict_users =eval(temp)
+        if args.testBestCondition:
+            setvolume = set()
+            for key in dict_users.keys():
+                setvolume = setvolume.union(dict_users[key])
+            for key in dict_users.keys():
+                dict_users[key] = setvolume
+        return dict_users
+    else:
+        print('create private_dataset_index ~ ')
+        # num_item = int(len(dataset) / num_users)
+        num_class_item = 3  # 用于达到作者目的！
+        dict_users = {}
+        for i in range(num_users):
+            dict_users[i]=set() # create the set dictionary
+        for i in range(num_users):
+            for key in dict.keys():
+                temp = set(np.random.choice(dict[key], num_class_item, replace=False)) # 样本无重复值
+                dict_users[i] = dict_users[i] | temp
+                dict[key] = list(set(dict[key]) - temp)
+        f = open(args.private_dataset_index,'w')
+        f.write(str(dict_users))
+        f.close()
+        return dict_users
 
-    
 
 def MNIST_random(dataset,epochs):
     num_item = 5000
@@ -240,44 +269,4 @@ class args:
 #         setvolume = setvolume.union(dict_users[key])
 #     for key in dict_users.keys():
 #         dict_users[key]=setvolume
-import scipy.io as sio
-import pandas as pd
 
-def load_EMNIST_data(file, verbose=False, standarized=False):
-    """
-    file should be the downloaded EMNIST file in .mat format.
-    """
-    mat = sio.loadmat(file)
-    data = mat["dataset"]
-
-    writer_ids_train = data['train'][0, 0]['writers'][0, 0]
-    writer_ids_train = np.squeeze(writer_ids_train)
-    X_train = data['train'][0, 0]['images'][0, 0]
-    X_train = X_train.reshape((X_train.shape[0], 28, 28), order="F")
-    y_train = data['train'][0, 0]['labels'][0, 0]
-    y_train = np.squeeze(y_train)
-    y_train -= 1  # y_train is zero-based
-
-    writer_ids_test = data['test'][0, 0]['writers'][0, 0]
-    writer_ids_test = np.squeeze(writer_ids_test)
-    X_test = data['test'][0, 0]['images'][0, 0]
-    X_test = X_test.reshape((X_test.shape[0], 28, 28), order="F")
-    y_test = data['test'][0, 0]['labels'][0, 0]
-    y_test = np.squeeze(y_test)
-    y_test -= 1  # y_test is zero-based
-
-    if standarized:
-        X_train = X_train / 255
-        X_test = X_test / 255
-        mean_image = np.mean(X_train, axis=0)
-        X_train -= mean_image
-        X_test -= mean_image
-
-    if verbose == True:
-        print("EMNIST-letter dataset ... ")
-        print("X_train shape :", X_train.shape)
-        print("X_test shape :", X_test.shape)
-        print("y_train shape :", y_train.shape)
-        print("y_test shape :", y_test.shape)
-
-    return X_train, y_train, X_test, y_test, writer_ids_train, writer_ids_test
